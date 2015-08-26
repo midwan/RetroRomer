@@ -16,7 +16,6 @@ namespace RetroRomerTest
         public void Initialize()
         {
             _fileReader = new FileReader();
-
         }
 
         [TestMethod]

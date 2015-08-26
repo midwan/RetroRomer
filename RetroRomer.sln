@@ -7,6 +7,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RetroRomer", "RetroRomer\Re
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RetroRomerTest", "RetroRomerTest\RetroRomerTest.csproj", "{7346B870-7F9B-4D6F-973C-297A091E0061}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RetroRomer.WPF", "RetroRomer.WPF\RetroRomer.WPF.csproj", "{8B8B7CBA-F0D8-47D5-B8BE-10083246FF00}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -21,6 +23,10 @@ Global
 		{7346B870-7F9B-4D6F-973C-297A091E0061}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{7346B870-7F9B-4D6F-973C-297A091E0061}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{7346B870-7F9B-4D6F-973C-297A091E0061}.Release|Any CPU.Build.0 = Release|Any CPU
+		{8B8B7CBA-F0D8-47D5-B8BE-10083246FF00}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{8B8B7CBA-F0D8-47D5-B8BE-10083246FF00}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{8B8B7CBA-F0D8-47D5-B8BE-10083246FF00}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{8B8B7CBA-F0D8-47D5-B8BE-10083246FF00}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

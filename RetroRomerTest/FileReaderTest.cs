@@ -10,19 +10,19 @@ namespace RetroRomerTest
     public class FileReaderTest
     {
         private FileReader _fileReader;
+        private const string Filename = @"D:\Downloads\MAMEUI_miss.txt";
 
         [TestInitialize]
         public void Initialize()
         {
             _fileReader = new FileReader();
+
         }
 
         [TestMethod]
         public void TestReadFile()
         {
-            var file = @"D:\Downloads\MAMEUI_miss.txt";
-
-            var result = _fileReader.ReadFile(file);
+            var result = _fileReader.ReadFile(Filename);
 
             Assert.IsNotNull(result);
             Assert.IsInstanceOfType(result, typeof(List<string>));
@@ -34,12 +34,14 @@ namespace RetroRomerTest
         {
             var contents = new List<string>
             {
+                " You are missing 4288 of 35273 known MAMEUI sets (+ BIOS sets)",
+                "",
                 "entry1",
                 "entry2",
                 "entry3"
             };
 
-            var result = _fileReader.ProcessEntries(contents);
+            var result = _fileReader.AddFilenameExtensionToEntries(contents);
 
             Assert.IsNotNull(result);
             Assert.IsInstanceOfType(result, typeof(List<string>));

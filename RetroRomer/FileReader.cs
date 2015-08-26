@@ -24,9 +24,16 @@ namespace RetroRomer
             }
         }
 
-        public IEnumerable<string> ProcessEntries(IEnumerable<string> fileContents)
+        public IEnumerable<string> AddFilenameExtensionToEntries(IEnumerable<string> fileContents)
         {
-            var modifiedList = fileContents.Select(entry => $"{entry}.zip").ToList();
+            var modifiedList = new List<string>();
+            foreach (var entry in fileContents)
+            {
+                if (!string.IsNullOrWhiteSpace(entry) && !entry.Contains("You are missing"))
+                {
+                    modifiedList.Add($"{entry}.zip");
+                }
+            }
             return modifiedList;
         }
     }

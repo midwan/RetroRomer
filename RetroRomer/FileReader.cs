@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.IO;
 
 namespace RetroRomer
 {
@@ -11,10 +12,10 @@ namespace RetroRomer
         public IEnumerable<string> ReadFile(string file)
         {
             if (string.IsNullOrEmpty(file) || string.IsNullOrWhiteSpace(file)) return new List<string>();
-            if (!System.IO.File.Exists(file)) return new List<string>();
+            if (!File.Exists(file)) return new List<string>();
             try
             {
-                var contents = System.IO.File.ReadAllLines(file);
+                var contents = File.ReadAllLines(file);
                 var contentsToList = new List<string>(contents);
                 return contentsToList;
             }

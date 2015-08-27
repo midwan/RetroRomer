@@ -22,7 +22,7 @@
         <Label x:Name="label" Content="Password:" HorizontalAlignment="Left" Margin="10,208,0,0" VerticalAlignment="Top" Width="66"/>
         <PasswordBox x:Name="pBoxPassword" HorizontalAlignment="Left" Margin="81,208,0,0" VerticalAlignment="Top" Height="26" Width="120" VerticalContentAlignment="Center"/>
         <Button x:Name="buttonDownload" Content="Download All Files" Margin="0,0,10,108" Height="26" VerticalAlignment="Bottom" HorizontalAlignment="Right" Click="buttonDownload_Click" Width="120"/>
-        <ListBox x:Name="listBoxLog" Margin="10,0,10,10" Height="85" VerticalAlignment="Bottom"/>
+        <ListBox x:Name="listBoxLog" Margin="10,0,10,10" Height="85" VerticalAlignment="Bottom" IsSynchronizedWithCurrentItem="True" ItemsSource="{Binding}"/>
 
     </Grid>
 </Window>

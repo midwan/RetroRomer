@@ -2,6 +2,7 @@
 using System.Collections.ObjectModel;
 using System.Threading.Tasks;
 using System.Windows;
+using System.Windows.Data;
 using System.Windows.Forms;
 using MessageBox = System.Windows.MessageBox;
 using OpenFileDialog = Microsoft.Win32.OpenFileDialog;
@@ -13,7 +14,7 @@ namespace RetroRomer.WPF
     /// </summary>
     public partial class MainWindow : Window
     {
-        private ObservableCollection<string> _logResults;
+        private ObservableCollection<string> LogResults { get; set; }
         private string _filename;
         private string _destinationPath;
         private string _username;
@@ -21,7 +22,7 @@ namespace RetroRomer.WPF
 
         public MainWindow()
         {
-            _logResults = new ObservableCollection<string>();
+            LogResults = new ObservableCollection<string>();
             InitializeComponent();
         }
 
@@ -55,15 +56,16 @@ namespace RetroRomer.WPF
             }
         }
 
-        private void buttonDownload_Click(object sender, RoutedEventArgs e)
+        private async void buttonDownload_Click(object sender, RoutedEventArgs e)
         {
-            listBoxLog.ItemsSource = _logResults;
+            BindingOperations.EnableCollectionSynchronization(LogResults, listBoxLog);
+            listBoxLog.ItemsSource = LogResults;
             _filename = textBoxFilename.Text;
             _destinationPath = textBoxDestination.Text;
             _username = textBoxUsername.Text;
             _password = pBoxPassword.Password;
 
-            PrepareAndDownloadFiles();
+            await Task.Run(() => PrepareAndDownloadFiles());
 
             MessageBox.Show("Download finished!", "Operation completed", MessageBoxButton.OK);
         }
@@ -72,10 +74,10 @@ namespace RetroRomer.WPF
         {
             var fileReader = new FileReader();
             var fileContents = fileReader.ReadFile(_filename);
-            _logResults.Add($"Opened and read file {_filename}");
+            LogResults.Add($"Opened and read file {_filename}");
 
             var processedContents = fileReader.AddFilenameExtensionToEntries(fileContents);
-            _logResults.Add($"Processed contents of file.");
+            LogResults.Add($"Processed contents of file.");
 
             var downloader = new Downloader
             {
@@ -83,12 +85,12 @@ namespace RetroRomer.WPF
                 Username = _username,
                 Password = _password
             };
-            _logResults.Add($"Initialized downloader");
+            LogResults.Add($"Initialized downloader");
             foreach (var file in processedContents)
             {
-                _logResults.Add($"Downloading file {file}");
+                LogResults.Add($"Downloading file {file}");
                 var response = downloader.GetFile(file);
-                _logResults.Add(response ? $"Successfully downloaded {file}" : $"Failed to download {file}");
+                LogResults.Add(response ? $"Successfully downloaded {file}" : $"Failed to download {file}");
             }
         }
 

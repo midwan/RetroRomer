@@ -1,8 +1,9 @@
 ﻿using System.Collections.Generic;
-using System.Diagnostics.Eventing.Reader;
+using System.Collections.ObjectModel;
+using System.Threading.Tasks;
 using System.Windows;
-using System.Windows.Controls;
 using System.Windows.Forms;
+using MessageBox = System.Windows.MessageBox;
 using OpenFileDialog = Microsoft.Win32.OpenFileDialog;
 
 namespace RetroRomer.WPF
@@ -12,8 +13,15 @@ namespace RetroRomer.WPF
     /// </summary>
     public partial class MainWindow : Window
     {
+        private ObservableCollection<string> _logResults;
+        private string _filename;
+        private string _destinationPath;
+        private string _username;
+        private string _password;
+
         public MainWindow()
         {
+            _logResults = new ObservableCollection<string>();
             InitializeComponent();
         }
 
@@ -49,37 +57,39 @@ namespace RetroRomer.WPF
 
         private void buttonDownload_Click(object sender, RoutedEventArgs e)
         {
+            listBoxLog.ItemsSource = _logResults;
+            _filename = textBoxFilename.Text;
+            _destinationPath = textBoxDestination.Text;
+            _username = textBoxUsername.Text;
+            _password = pBoxPassword.Password;
+
             PrepareAndDownloadFiles();
+
+            MessageBox.Show("Download finished!", "Operation completed", MessageBoxButton.OK);
         }
 
         private void PrepareAndDownloadFiles()
         {
-            var logResults = new List<string>();
-            listBoxLog.ItemsSource = logResults;
-
             var fileReader = new FileReader();
-            var fileContents = fileReader.ReadFile(textBoxFilename.Text);
-            logResults.Add($"Opened and read file {textBoxFilename.Text}");
+            var fileContents = fileReader.ReadFile(_filename);
+            _logResults.Add($"Opened and read file {_filename}");
 
             var processedContents = fileReader.AddFilenameExtensionToEntries(fileContents);
-            logResults.Add($"Processed contents of file.");
+            _logResults.Add($"Processed contents of file.");
 
             var downloader = new Downloader
             {
-                DestinationPath = textBoxDestination.Text,
-                Username = textBoxUsername.Text,
-                Password = pBoxPassword.Password
+                DestinationPath = _destinationPath,
+                Username = _username,
+                Password = _password
             };
-            logResults.Add($"Initialized downloader");
-
+            _logResults.Add($"Initialized downloader");
             foreach (var file in processedContents)
             {
-                logResults.Add($"Downloading file {file}");
+                _logResults.Add($"Downloading file {file}");
                 var response = downloader.GetFile(file);
-                logResults.Add(response ? $"Successfully downloaded {file}" : $"Failed to download {file}");
+                _logResults.Add(response ? $"Successfully downloaded {file}" : $"Failed to download {file}");
             }
-
-            System.Windows.MessageBox.Show("Download finished!", "Operation completed", MessageBoxButton.OK);
         }
 
         private void radioButtonRetroRoms_Click(object sender, RoutedEventArgs e)

@@ -22,7 +22,7 @@ namespace RetroRomerTest
         }
 
         [TestMethod]
-        public void TestDownloadFile()
+        public void TestDownloadFile_ValidFile_DownloadsFile()
         {
             _downloader.Website = _website;
             _downloader.Username = Username;
@@ -33,6 +33,20 @@ namespace RetroRomerTest
 
             Assert.IsTrue(result);
             Assert.IsTrue(File.Exists(Path.Combine(DestinationPath, Filename)));
+        }
+
+        [TestMethod]
+        public void TestDownloadFile_InvalidFile()
+        {
+            _downloader.Website = _website;
+            _downloader.Username = Username;
+            _downloader.Password = Password;
+            _downloader.DestinationPath = DestinationPath;
+            const string invalidFilename = "setup1.exe";
+
+            var result = _downloader.GetFile(invalidFilename);
+
+            Assert.IsFalse(result);
         }
     }
 }

@@ -24,7 +24,16 @@ namespace RetroRomer
             {
                 if (!string.IsNullOrEmpty(Username) && !string.IsNullOrEmpty(Password))
                     client.Credentials = new NetworkCredential(Username, Password);
-                client.DownloadFile(fullUri, Path.Combine(DestinationPath, fileUri));
+
+                try
+                {
+                    client.DownloadFile(fullUri, Path.Combine(DestinationPath, fileUri));
+                }
+                catch (Exception)
+                {
+                    return false;
+                }
+                
             }
             return true;
         }

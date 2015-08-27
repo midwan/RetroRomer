@@ -55,6 +55,7 @@
     <Compile Include="FileReaderTest.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="DownloaderTest.cs" />
+    <Compile Include="FileWriterTest.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\RetroRomer\RetroRomer.csproj">

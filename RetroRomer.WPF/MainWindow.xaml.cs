@@ -1,23 +1,14 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Collections.Generic;
+using System.Diagnostics.Eventing.Reader;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
 using System.Windows.Forms;
-using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
-using System.Windows.Shapes;
+using OpenFileDialog = Microsoft.Win32.OpenFileDialog;
 
 namespace RetroRomer.WPF
 {
     /// <summary>
-    /// Interaction logic for MainWindow.xaml
+    ///     Interaction logic for MainWindow.xaml
     /// </summary>
     public partial class MainWindow : Window
     {
@@ -33,7 +24,7 @@ namespace RetroRomer.WPF
 
         private void buttonSelectFile_Click(object sender, RoutedEventArgs e)
         {
-            var dlg = new Microsoft.Win32.OpenFileDialog
+            var dlg = new OpenFileDialog
             {
                 DefaultExt = ".txt",
                 Filter =
@@ -53,12 +44,42 @@ namespace RetroRomer.WPF
             if (result == System.Windows.Forms.DialogResult.OK)
             {
                 textBoxDestination.Text = dialog.SelectedPath;
-            }               
+            }
         }
 
         private void buttonDownload_Click(object sender, RoutedEventArgs e)
         {
-            // TODO: Start the download process
+            PrepareAndDownloadFiles();
+        }
+
+        private void PrepareAndDownloadFiles()
+        {
+            var logResults = new List<string>();
+            listBoxLog.ItemsSource = logResults;
+
+            var fileReader = new FileReader();
+            var fileContents = fileReader.ReadFile(textBoxFilename.Text);
+            logResults.Add($"Opened and read file {textBoxFilename.Text}");
+
+            var processedContents = fileReader.AddFilenameExtensionToEntries(fileContents);
+            logResults.Add($"Processed contents of file.");
+
+            var downloader = new Downloader
+            {
+                DestinationPath = textBoxDestination.Text,
+                Username = textBoxUsername.Text,
+                Password = pBoxPassword.Password
+            };
+            logResults.Add($"Initialized downloader");
+
+            foreach (var file in processedContents)
+            {
+                logResults.Add($"Downloading file {file}");
+                var response = downloader.GetFile(file);
+                logResults.Add(response ? $"Successfully downloaded {file}" : $"Failed to download {file}");
+            }
+
+            System.Windows.MessageBox.Show("Download finished!", "Operation completed", MessageBoxButton.OK);
         }
 
         private void radioButtonRetroRoms_Click(object sender, RoutedEventArgs e)

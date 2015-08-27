@@ -17,7 +17,7 @@ namespace RetroRomer
 
         public bool GetFile(string fileUri)
         {
-            if (string.IsNullOrWhiteSpace(Website.ToString())) Website = new Uri(@"http://bda.retroroms.net/downloads/mame/currentroms/");
+            if (Website == null) Website = new Uri(@"http://bda.retroroms.net/downloads/mame/currentroms/");
 
             var fullUri = new Uri(Website, fileUri);
             using (var client = new WebClient())
@@ -34,6 +34,29 @@ namespace RetroRomer
                     return false;
                 }
                 
+            }
+            return true;
+        }
+
+        public bool GetFileAsync(string fileUri)
+        {
+            if (Website == null) Website = new Uri(@"http://bda.retroroms.net/downloads/mame/currentroms/");
+
+            var fullUri = new Uri(Website, fileUri);
+            using (var client = new WebClient())
+            {
+                if (!string.IsNullOrEmpty(Username) && !string.IsNullOrEmpty(Password))
+                    client.Credentials = new NetworkCredential(Username, Password);
+
+                try
+                {
+                    client.DownloadFileAsync(fullUri, Path.Combine(DestinationPath, fileUri));
+                }
+                catch (Exception)
+                {
+                    return false;
+                }
+
             }
             return true;
         }

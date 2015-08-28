@@ -1,5 +1,4 @@
-﻿using System.Collections.Generic;
-using System.Collections.ObjectModel;
+﻿using System.Collections.ObjectModel;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Data;
@@ -14,17 +13,18 @@ namespace RetroRomer.WPF
     /// </summary>
     public partial class MainWindow : Window
     {
-        private ObservableCollection<string> LogResults { get; set; }
-        private string _filename;
         private string _destinationPath;
-        private string _username;
+        private string _filename;
         private string _password;
+        private string _username;
 
         public MainWindow()
         {
             LogResults = new ObservableCollection<string>();
             InitializeComponent();
         }
+
+        private ObservableCollection<string> LogResults { get; }
 
         private void radioButtonCustom_Checked(object sender, RoutedEventArgs e)
         {
@@ -90,7 +90,9 @@ namespace RetroRomer.WPF
             {
                 LogResults.Add($"Downloading file {file}");
                 var response = downloader.GetFile(file);
-                LogResults.Add(response ? $"Successfully downloaded {file}" : $"Failed to download {file}");
+                LogResults.Add(response.Success
+                    ? $"Successfully downloaded {file}"
+                    : $"Failed to download {file}: {response.Information}");
             }
         }
 

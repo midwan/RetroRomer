@@ -1,10 +1,7 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.IO;
-using System.Linq;
 using System.Net;
-using System.Text;
-using System.Threading.Tasks;
+using RetroRomer.Classes;
 
 namespace RetroRomer
 {
@@ -15,7 +12,7 @@ namespace RetroRomer
         public string Password { get; set; }
         public string DestinationPath { get; set; }
 
-        public bool GetFile(string fileUri)
+        public OperationResult GetFile(string fileUri)
         {
             if (Website == null) Website = new Uri(@"http://bda.retroroms.net/downloads/mame/currentroms/");
 
@@ -29,36 +26,17 @@ namespace RetroRomer
                 {
                     client.DownloadFile(fullUri, Path.Combine(DestinationPath, fileUri));
                 }
-                catch (Exception)
+                catch (Exception ex)
                 {
-                    return false;
+                    return new OperationResult
+                    {
+                        Success = false,
+                        Information = ex.Message,
+                        InnerException = ex.InnerException
+                    };
                 }
-                
             }
-            return true;
-        }
-
-        public bool GetFileAsync(string fileUri)
-        {
-            if (Website == null) Website = new Uri(@"http://bda.retroroms.net/downloads/mame/currentroms/");
-
-            var fullUri = new Uri(Website, fileUri);
-            using (var client = new WebClient())
-            {
-                if (!string.IsNullOrEmpty(Username) && !string.IsNullOrEmpty(Password))
-                    client.Credentials = new NetworkCredential(Username, Password);
-
-                try
-                {
-                    client.DownloadFileAsync(fullUri, Path.Combine(DestinationPath, fileUri));
-                }
-                catch (Exception)
-                {
-                    return false;
-                }
-
-            }
-            return true;
+            return new OperationResult {Success = true};
         }
     }
 }

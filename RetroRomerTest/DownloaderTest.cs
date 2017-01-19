@@ -31,7 +31,7 @@ namespace RetroRomerTest
 
             var result = _downloader.GetFile(Filename);
 
-            Assert.IsTrue(result);
+            Assert.IsTrue(result.Success);
             Assert.IsTrue(File.Exists(Path.Combine(DestinationPath, Filename)));
         }
 
@@ -46,7 +46,7 @@ namespace RetroRomerTest
 
             var result = _downloader.GetFile(invalidFilename);
 
-            Assert.IsFalse(result);
+            Assert.IsFalse(result.Success);
         }
     }
 }

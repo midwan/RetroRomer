@@ -14,7 +14,7 @@
         <TextBox x:Name="textBoxDestination" Height="26" Margin="123,59,92,0" TextWrapping="Wrap" VerticalAlignment="Top" VerticalContentAlignment="Center"/>
         <Button x:Name="buttonSelectDestination" Content="Select" Margin="0,59,10,0" VerticalAlignment="Top" Height="26" HorizontalAlignment="Right" Width="77" Click="buttonSelectDestination_Click"/>
         <Label x:Name="labelWebsite" Content="Download website:" HorizontalAlignment="Left" Margin="10,104,0,0" VerticalAlignment="Top"/>
-        <RadioButton x:Name="radioButtonRetroRoms" Content="RetroRoms.net" HorizontalAlignment="Left" Margin="125,104,0,0" VerticalAlignment="Top" IsChecked="True" Height="26" VerticalContentAlignment="Center" Click="radioButtonRetroRoms_Click"/>
+        <RadioButton x:Name="radioButtonRetroRoms" Content="RetroRoms.info" HorizontalAlignment="Left" Margin="125,104,0,0" VerticalAlignment="Top" IsChecked="True" Height="26" VerticalContentAlignment="Center" Click="radioButtonRetroRoms_Click"/>
         <RadioButton x:Name="radioButtonCustom" Content="Custom:" HorizontalAlignment="Left" Margin="125,135,0,0" VerticalAlignment="Top" Height="26" VerticalContentAlignment="Center" Checked="radioButtonCustom_Checked"/>
         <TextBox x:Name="textBoxCustomWebsite" Height="26" Margin="192,135,92,0" TextWrapping="Wrap" VerticalAlignment="Top" VerticalContentAlignment="Center"/>
         <Label x:Name="labelUsername" Content="Username:" HorizontalAlignment="Left" Margin="10,177,0,0" VerticalAlignment="Top"/>

@@ -14,7 +14,7 @@ namespace RetroRomer
 
         public OperationResult GetFile(string fileUri)
         {
-            if (Website == null) Website = new Uri(@"http://bda.retroroms.net/downloads/mame/currentroms/");
+            if (Website == null) Website = new Uri(@"http://bda.retroroms.info/downloads/mame/currentroms/");
 
             var fullUri = new Uri(Website, fileUri);
             using (var client = new WebClient())

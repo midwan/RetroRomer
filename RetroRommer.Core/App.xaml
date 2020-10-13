@@ -1,7 +1,7 @@
-﻿<Application x:Class="RetroRomer.WPF.App"
+﻿<Application x:Class="RetroRommer.Core.App"
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-             xmlns:local="clr-namespace:RetroRomer.WPF"
+             xmlns:local="clr-namespace:RetroRommer.Core"
              StartupUri="MainWindow.xaml">
     <Application.Resources>
          

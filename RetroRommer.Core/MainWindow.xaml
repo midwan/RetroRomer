@@ -5,7 +5,8 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:RetroRommer.Core"
         mc:Ignorable="d"
-        Title="MainWindow" Height="320" Width="620" WindowStartupLocation="CenterScreen" MinHeight="320" MinWidth="620">
+        DataContext="{Binding RelativeSource={RelativeSource Self}}"
+        Title="MainWindow" Height="500" Width="620" WindowStartupLocation="CenterScreen" MinHeight="400" MinWidth="620">
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto"/>
@@ -14,6 +15,7 @@
             <RowDefinition Height="Auto"/>
             <RowDefinition Height="Auto"/>
             <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
         </Grid.RowDefinitions>
 
         <StackPanel Grid.Row="0" Orientation="Horizontal">
@@ -44,8 +46,17 @@
         </StackPanel>
  
         <StackPanel Grid.Row="5" Orientation="Horizontal">
-            <Button x:Name="ButtonDownload" Content="Download All Files" Margin="10" Height="26" VerticalAlignment="Bottom" Click="ButtonDownload_Click" Width="120"/>
-            <TextBlock x:Name="TbStatus" Height="26" VerticalAlignment="Center"/>
+            <Button x:Name="ButtonDownload" Content="Begin Downloads" Margin="10" Height="26" VerticalAlignment="Bottom" Click="ButtonDownload_Click" Width="120" IsDefault="True"/>
+            <Button x:Name="ButtonAbort" Content="Abort" Margin="10" Height="26" Width="120" Click="ButtonAbort_OnClick" IsEnabled="False" IsCancel="True"/>
         </StackPanel>
+
+        <ListView x:Name="LvLog" Grid.Row="6" Margin="5" ItemsSource="{Binding LogCollection}">
+            <ListView.View>
+                <GridView>
+                    <GridViewColumn Header="Filename" Width="400" DisplayMemberBinding="{Binding Filename}"/>
+                    <GridViewColumn Header="Success" Width="100" DisplayMemberBinding="{Binding Success}"/>
+                </GridView>
+            </ListView.View>
+        </ListView>
     </Grid>
 </Window>

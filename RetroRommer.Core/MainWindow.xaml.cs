@@ -1,4 +1,5 @@
-﻿using System.IO;
+﻿using System.Collections.ObjectModel;
+using System.IO;
 using System.Threading.Tasks;
 using System.Windows;
 using Microsoft.Extensions.Configuration;
@@ -21,6 +22,7 @@ namespace RetroRommer.Core
         private readonly Logger _logger;
         private string _password;
         private string _username;
+        private bool _abortRequested;
 
         public MainWindow()
         {
@@ -43,6 +45,9 @@ namespace RetroRommer.Core
             TextBoxUsername.Text = configuration.GetValue("Username", string.Empty);
             PBoxPassword.Password = configuration.GetValue("Password", string.Empty);
         }
+
+        public ObservableCollection<LogDto> LogCollection { get; } =
+            new ObservableCollection<LogDto>();
 
         private void ButtonSelectFile_Click(object sender, RoutedEventArgs e)
         {
@@ -73,20 +78,49 @@ namespace RetroRommer.Core
             _password = PBoxPassword.Password;
 
             await PrepareAndDownloadFiles();
-            MessageBox.Show("Download finished!", "Operation completed", MessageBoxButton.OK);
         }
 
         private async Task PrepareAndDownloadFiles()
         {
             _logger.Information("Beginning to download files...");
+            ButtonAbort.IsEnabled = true;
             var fileContents = _service.ReadFile(_filename);
             var processedContents = _service.AddFilenameExtensionToEntries(fileContents);
 
             foreach (var file in processedContents)
             {
-                TbStatus.Text = $"{file}";
-                await _service.GetFile(file, _username, _password, _destinationPath);
+                if (_abortRequested) break;
+                var logRow = new LogDto
+                {
+                    Filename = file, 
+                    Success = await _service.GetFile(file, _username, _password, _destinationPath)
+                };
+                LogCollection.Add(logRow);
             }
+
+            if (_abortRequested)
+            {
+                _abortRequested = false;
+                var logRow = new LogDto
+                {
+                    Filename = "Aborted!"
+                };
+                LogCollection.Add(logRow);
+            }
+            else
+            {
+                var logRow = new LogDto
+                {
+                    Filename = "All downloads finished."
+                };
+                LogCollection.Add(logRow);
+            }
+        }
+
+        private void ButtonAbort_OnClick(object sender, RoutedEventArgs e)
+        {
+            _abortRequested = true;
+            ButtonAbort.IsEnabled = false;
         }
     }
 }

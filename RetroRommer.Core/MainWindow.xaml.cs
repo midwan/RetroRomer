@@ -1,4 +1,5 @@
 ﻿using System.IO;
+using System.Threading.Tasks;
 using System.Windows;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Win32;
@@ -64,26 +65,28 @@ namespace RetroRommer.Core
             if (dialog.ShowDialog() == true) TextBoxDestination.Text = dialog.SelectedPath;
         }
 
-        private void ButtonDownload_Click(object sender, RoutedEventArgs e)
+        private async void ButtonDownload_Click(object sender, RoutedEventArgs e)
         {
             _filename = TextBoxFilename.Text;
             _destinationPath = TextBoxDestination.Text;
             _username = TextBoxUsername.Text;
             _password = PBoxPassword.Password;
 
-            PrepareAndDownloadFiles();
-
+            await PrepareAndDownloadFiles();
             MessageBox.Show("Download finished!", "Operation completed", MessageBoxButton.OK);
         }
 
-        private async void PrepareAndDownloadFiles()
+        private async Task PrepareAndDownloadFiles()
         {
             _logger.Information("Beginning to download files...");
             var fileContents = _service.ReadFile(_filename);
             var processedContents = _service.AddFilenameExtensionToEntries(fileContents);
 
             foreach (var file in processedContents)
+            {
+                TbStatus.Text = $"{file}";
                 await _service.GetFile(file, _username, _password, _destinationPath);
+            }
         }
     }
 }

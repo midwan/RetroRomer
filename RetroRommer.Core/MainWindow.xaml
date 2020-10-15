@@ -45,6 +45,7 @@
  
         <StackPanel Grid.Row="5" Orientation="Horizontal">
             <Button x:Name="ButtonDownload" Content="Download All Files" Margin="10" Height="26" VerticalAlignment="Bottom" Click="ButtonDownload_Click" Width="120"/>
+            <TextBlock x:Name="TbStatus" Height="26" VerticalAlignment="Center"/>
         </StackPanel>
     </Grid>
 </Window>

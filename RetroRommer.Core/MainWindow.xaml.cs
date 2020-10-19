@@ -1,4 +1,5 @@
 ﻿using System.Collections.ObjectModel;
+using System.Collections.Specialized;
 using System.IO;
 using System.Threading.Tasks;
 using System.Windows;
@@ -36,6 +37,7 @@ namespace RetroRommer.Core
                 .CreateLogger();
 
             InitializeComponent();
+            ((INotifyCollectionChanged)LvLog.Items).CollectionChanged += ListView_CollectionChanged;
 
             _service = new RetroRommerService(_logger);
 
@@ -48,6 +50,16 @@ namespace RetroRommer.Core
 
         public ObservableCollection<LogDto> LogCollection { get; } =
             new ObservableCollection<LogDto>();
+
+        private void ListView_CollectionChanged(object sender, NotifyCollectionChangedEventArgs e)
+        {
+            if (e.Action == NotifyCollectionChangedAction.Add)
+            {
+                // scroll the new item into view
+                if (e.NewItems[0] != null)
+                    LvLog.ScrollIntoView(e.NewItems[0]);
+            }
+        }
 
         private void ButtonSelectFile_Click(object sender, RoutedEventArgs e)
         {
@@ -93,7 +105,7 @@ namespace RetroRommer.Core
                 var logRow = new LogDto
                 {
                     Filename = file, 
-                    Success = await _service.GetFile(file, _username, _password, _destinationPath)
+                    Result = await _service.GetFile(file, _username, _password, _destinationPath)
                 };
                 LogCollection.Add(logRow);
             }

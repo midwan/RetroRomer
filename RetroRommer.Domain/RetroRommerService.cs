@@ -60,7 +60,7 @@ namespace RetroRommer.Domain
             return modifiedList;
         }
 
-        public async Task<bool> GetFile(string file, string userName, string passwd, string destination)
+        public async Task<string> GetFile(string file, string userName, string passwd, string destination)
         {
             var website = $"https://bda.retroroms.info:82/downloads/mame/currentroms/{file}";
             using var client = new HttpClient();
@@ -80,10 +80,13 @@ namespace RetroRommer.Domain
             {
                 // ReSharper disable once RedundantVerbatimPrefix
                 _logger.Fatal($"File failed to download: {file}.\n{@ex}");
-                return false;
+                var pos1 = ex.Message.IndexOf("(", StringComparison.Ordinal);
+                var pos2 = ex.Message.IndexOf(")", StringComparison.Ordinal);
+                var result = ex.Message.Substring(pos1 + 1, pos2 - pos1);
+                return result;
             }
 
-            return true;
+            return "OK";
         }
     }
 }

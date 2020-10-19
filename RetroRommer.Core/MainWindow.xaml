@@ -54,7 +54,7 @@
             <ListView.View>
                 <GridView>
                     <GridViewColumn Header="Filename" Width="400" DisplayMemberBinding="{Binding Filename}"/>
-                    <GridViewColumn Header="Success" Width="100" DisplayMemberBinding="{Binding Success}"/>
+                    <GridViewColumn Header="Result" Width="200" DisplayMemberBinding="{Binding Result}"/>
                 </GridView>
             </ListView.View>
         </ListView>

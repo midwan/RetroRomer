@@ -18,21 +18,6 @@ namespace RetroRommer.Domain
             _logger = logger;
         }
 
-        public bool WriteFile(string filename, IEnumerable<string> fileContents)
-        {
-            if (string.IsNullOrEmpty(filename) || string.IsNullOrWhiteSpace(filename)) return false;
-            try
-            {
-                File.WriteAllLines(filename, fileContents);
-            }
-            catch (Exception)
-            {
-                return false;
-            }
-
-            return true;
-        }
-
         public IEnumerable<string> ReadFile(string file)
         {
             if (string.IsNullOrEmpty(file) || string.IsNullOrWhiteSpace(file)) return new List<string>();
@@ -62,27 +47,25 @@ namespace RetroRommer.Domain
 
         public async Task<string> GetFile(string file, string userName, string passwd, string destination)
         {
-            var website = $"https://bda.retroroms.info:82/downloads/mame/currentroms/{file}";
             using var client = new HttpClient();
-
             var authToken = Encoding.ASCII.GetBytes($"{userName}:{passwd}");
             client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Basic",
                 Convert.ToBase64String(authToken));
 
             try
             {
-                var fileBytes = await client.GetByteArrayAsync(website);
+                var fileBytes = await client.GetByteArrayAsync(file);
                 var localPath = Path.Combine(destination, file);
-                _logger.Information($"Downloading file from {website} to {localPath}");
+                _logger.Information($"Downloading file from {file} to {localPath}");
                 await File.WriteAllBytesAsync(localPath, fileBytes);
             }
             catch (Exception ex)
             {
                 // ReSharper disable once RedundantVerbatimPrefix
                 _logger.Fatal($"File failed to download: {file}.\n{@ex}");
-                var pos1 = ex.Message.IndexOf("(", StringComparison.Ordinal);
+                var pos1 = ex.Message.IndexOf("(", StringComparison.Ordinal) + 1;
                 var pos2 = ex.Message.IndexOf(")", StringComparison.Ordinal);
-                var result = ex.Message.Substring(pos1 + 1, pos2 - pos1);
+                var result = ex.Message.Substring(pos1, pos2 - pos1);
                 return result;
             }
 

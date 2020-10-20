@@ -32,7 +32,7 @@
 
         <StackPanel Grid.Row="2" Orientation="Horizontal">
             <Label Content="Download website:" Width="110" Margin="10" VerticalAlignment="Top"/>
-            <TextBox x:Name="TextBoxCustomWebsite" Width="350" Height="26" Margin="10" TextWrapping="Wrap" VerticalAlignment="Top" VerticalContentAlignment="Center"/>
+            <TextBox x:Name="TextBoxWebsite" Width="350" Height="26" Margin="10" TextWrapping="Wrap" VerticalAlignment="Top" VerticalContentAlignment="Center"/>
         </StackPanel>
 
         <StackPanel Grid.Row="3" Orientation="Horizontal">

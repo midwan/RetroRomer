@@ -24,6 +24,7 @@ namespace RetroRommer.Core
         private string _password;
         private string _username;
         private bool _abortRequested;
+        private string _website;
 
         public MainWindow()
         {
@@ -41,7 +42,7 @@ namespace RetroRommer.Core
 
             _service = new RetroRommerService(_logger);
 
-            TextBoxCustomWebsite.Text = configuration.GetValue("Website", string.Empty);
+            TextBoxWebsite.Text = configuration.GetValue("Website", string.Empty);
             TextBoxFilename.Text = configuration.GetValue("MissFile", string.Empty);
             TextBoxDestination.Text = configuration.GetValue("Destination", string.Empty);
             TextBoxUsername.Text = configuration.GetValue("Username", string.Empty);
@@ -84,11 +85,20 @@ namespace RetroRommer.Core
 
         private async void ButtonDownload_Click(object sender, RoutedEventArgs e)
         {
+            _website = TextBoxWebsite.Text;
             _filename = TextBoxFilename.Text;
             _destinationPath = TextBoxDestination.Text;
             _username = TextBoxUsername.Text;
             _password = PBoxPassword.Password;
 
+            if (string.IsNullOrEmpty(_website) || string.IsNullOrEmpty(_filename) ||
+                string.IsNullOrEmpty(_destinationPath))
+            {
+                MessageBox.Show(
+                    "Missing required information! Make sure the Website, filename and destination fields are filled in.",
+                    "Missing required information", MessageBoxButton.OK, MessageBoxImage.Error);
+                return;
+            }
             await PrepareAndDownloadFiles();
         }
 
@@ -102,10 +112,11 @@ namespace RetroRommer.Core
             foreach (var file in processedContents)
             {
                 if (_abortRequested) break;
+                var url = _website + file;
                 var logRow = new LogDto
                 {
                     Filename = file, 
-                    Result = await _service.GetFile(file, _username, _password, _destinationPath)
+                    Result = await _service.GetFile(url, _username, _password, _destinationPath)
                 };
                 LogCollection.Add(logRow);
             }

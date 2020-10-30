@@ -112,11 +112,10 @@ namespace RetroRommer.Core
             foreach (var file in processedContents)
             {
                 if (_abortRequested) break;
-                var url = _website + file;
                 var logRow = new LogDto
                 {
                     Filename = file, 
-                    Result = await _service.GetFile(url, _username, _password, _destinationPath)
+                    Result = await _service.GetFile(_website, file, _username, _password, _destinationPath)
                 };
                 LogCollection.Add(logRow);
             }

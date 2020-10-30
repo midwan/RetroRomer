@@ -45,7 +45,7 @@ namespace RetroRommer.Domain
             return modifiedList;
         }
 
-        public async Task<string> GetFile(string file, string userName, string passwd, string destination)
+        public async Task<string> GetFile(string website, string file, string userName, string passwd, string destination)
         {
             using var client = new HttpClient();
             var authToken = Encoding.ASCII.GetBytes($"{userName}:{passwd}");
@@ -54,7 +54,8 @@ namespace RetroRommer.Domain
 
             try
             {
-                var fileBytes = await client.GetByteArrayAsync(file);
+                var url = website + file;
+                var fileBytes = await client.GetByteArrayAsync(url);
                 var localPath = Path.Combine(destination, file);
                 _logger.Information($"Downloading file from {file} to {localPath}");
                 await File.WriteAllBytesAsync(localPath, fileBytes);

@@ -36,7 +36,7 @@ namespace RetroRommer.Domain
             }
         }
 
-        public IEnumerable<string> AddFilenameExtensionToEntries(IEnumerable<string> fileContents)
+        public static IEnumerable<string> AddFilenameExtensionToEntries(IEnumerable<string> fileContents)
         {
             var modifiedList = new List<string>();
             foreach (var entry in fileContents)
@@ -68,7 +68,7 @@ namespace RetroRommer.Domain
                 var pos1 = ex.Message.IndexOf("(", StringComparison.Ordinal) + 1;
                 var pos2 = ex.Message.IndexOf(")", StringComparison.Ordinal);
                 if (pos1 != -1 && pos2 != -1)
-                    result = ex.Message.Substring(pos1, pos2 - pos1);
+                    result = ex.Message[pos1..pos2];
                 else
                     result = "Error!";
 

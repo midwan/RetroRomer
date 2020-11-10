@@ -57,7 +57,7 @@ namespace RetroRommer.Core
             if (e.Action == NotifyCollectionChangedAction.Add)
             {
                 // scroll the new item into view
-                if (e.NewItems[0] != null)
+                if (e.NewItems?[0] != null)
                     LvLog.ScrollIntoView(e.NewItems[0]);
             }
         }
@@ -107,7 +107,7 @@ namespace RetroRommer.Core
             _logger.Information("Beginning to download files...");
             ButtonAbort.IsEnabled = true;
             var fileContents = _service.ReadFile(_filename);
-            var processedContents = _service.AddFilenameExtensionToEntries(fileContents);
+            var processedContents = RetroRommerService.AddFilenameExtensionToEntries(fileContents);
 
             foreach (var file in processedContents)
             {
@@ -140,6 +140,7 @@ namespace RetroRommer.Core
                 };
                 LogCollection.Add(logRow);
             }
+            ButtonAbort.IsEnabled = false;
         }
 
         private void ButtonAbort_OnClick(object sender, RoutedEventArgs e)

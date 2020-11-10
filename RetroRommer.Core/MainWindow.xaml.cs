@@ -118,6 +118,9 @@ namespace RetroRommer.Core
                     Result = await _service.GetFile(_website, file, _username, _password, _destinationPath)
                 };
                 LogCollection.Add(logRow);
+
+                if (logRow.Result == "Unauthorized")
+                    break;
             }
 
             if (_abortRequested)

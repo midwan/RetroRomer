@@ -50,7 +50,7 @@ namespace RetroRommer.Core
         }
 
         public ObservableCollection<LogDto> LogCollection { get; } =
-            new ObservableCollection<LogDto>();
+            new();
 
         private void ListView_CollectionChanged(object sender, NotifyCollectionChangedEventArgs e)
         {

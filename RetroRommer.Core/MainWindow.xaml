@@ -3,6 +3,8 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:wpfui="clr-namespace:WPFUI.Controls;assembly=WPFUI"
+        Style="{StaticResource UiWindow}"
         mc:Ignorable="d"
         DataContext="{Binding RelativeSource={RelativeSource Self}}"
         Title="MainWindow" Height="500" Width="620" WindowStartupLocation="CenterScreen" MinHeight="400" MinWidth="620">
@@ -14,42 +16,45 @@
             <RowDefinition Height="Auto"/>
             <RowDefinition Height="Auto"/>
             <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
             <RowDefinition Height="*"/>
         </Grid.RowDefinitions>
 
-        <StackPanel Grid.Row="0" Orientation="Horizontal">
+        <wpfui:TitleBar Grid.Row="0" ApplicationNavigation="True" />
+
+        <StackPanel Grid.Row="1" Orientation="Horizontal">
             <Label Content="MAME Miss file:" Width="110" Margin="10" VerticalAlignment="Top"/>
-            <TextBox x:Name="TextBoxFilename" Width="350" Height="26" Margin="10" TextWrapping="Wrap" VerticalAlignment="Top" VerticalContentAlignment="Center"/>
-            <Button x:Name="ButtonSelectFile" Content="Select" Margin="10" VerticalAlignment="Top" Height="26" Width="77" Click="ButtonSelectFile_Click"/>
+            <TextBox x:Name="TextBoxFilename" Width="350" Margin="10" TextWrapping="Wrap" VerticalAlignment="Top" VerticalContentAlignment="Center"/>
+            <Button x:Name="ButtonSelectFile" Content="Select" Margin="10" VerticalAlignment="Top" Click="ButtonSelectFile_Click"/>
         </StackPanel>
         
-        <StackPanel Grid.Row="1" Orientation="Horizontal">
-            <Label Content="Destination folder:" Width="110" Margin="10" VerticalAlignment="Top"/>
-            <TextBox x:Name="TextBoxDestination" Width="350" Height="26" Margin="10" TextWrapping="Wrap" VerticalAlignment="Top" VerticalContentAlignment="Center"/>
-            <Button x:Name="ButtonSelectDestination" Content="Select" Margin="10" VerticalAlignment="Top" Height="26" Width="77" Click="ButtonSelectDestination_Click"/>
-        </StackPanel>
-
         <StackPanel Grid.Row="2" Orientation="Horizontal">
-            <Label Content="Download website:" Width="110" Margin="10" VerticalAlignment="Top"/>
-            <TextBox x:Name="TextBoxWebsite" Width="350" Height="26" Margin="10" TextWrapping="Wrap" VerticalAlignment="Top" VerticalContentAlignment="Center"/>
+            <Label Content="Destination folder:" Width="110" Margin="10" VerticalAlignment="Top"/>
+            <TextBox x:Name="TextBoxDestination" Width="350" Margin="10" TextWrapping="Wrap" VerticalAlignment="Top" VerticalContentAlignment="Center"/>
+            <Button x:Name="ButtonSelectDestination" Content="Select" Margin="10" VerticalAlignment="Top" Click="ButtonSelectDestination_Click"/>
         </StackPanel>
 
         <StackPanel Grid.Row="3" Orientation="Horizontal">
-            <Label Content="Username:" HorizontalAlignment="Left" Margin="10" VerticalAlignment="Top"/>
-            <TextBox x:Name="TextBoxUsername" HorizontalAlignment="Left" Height="26" Margin="10" TextWrapping="Wrap" VerticalAlignment="Top" Width="120" VerticalContentAlignment="Center"/>
+            <Label Content="Download website:" Width="110" Margin="10" VerticalAlignment="Top"/>
+            <TextBox x:Name="TextBoxWebsite" Width="350" Margin="10" TextWrapping="Wrap" VerticalAlignment="Top" VerticalContentAlignment="Center"/>
         </StackPanel>
 
         <StackPanel Grid.Row="4" Orientation="Horizontal">
-            <Label Content="Password:" HorizontalAlignment="Left" Margin="10" VerticalAlignment="Top" Width="66"/>
-            <PasswordBox x:Name="PBoxPassword" HorizontalAlignment="Left" Margin="10" VerticalAlignment="Top" Height="26" Width="120" VerticalContentAlignment="Center"/>
-        </StackPanel>
- 
-        <StackPanel Grid.Row="5" Orientation="Horizontal">
-            <Button x:Name="ButtonDownload" Content="Begin Downloads" Margin="10" Height="26" VerticalAlignment="Bottom" Click="ButtonDownload_Click" Width="120" IsDefault="True"/>
-            <Button x:Name="ButtonAbort" Content="Abort" Margin="10" Height="26" Width="120" Click="ButtonAbort_OnClick" IsEnabled="False" IsCancel="True"/>
+            <Label Content="Username:" HorizontalAlignment="Left" Margin="10" VerticalAlignment="Top"/>
+            <TextBox x:Name="TextBoxUsername" HorizontalAlignment="Left" Margin="10" TextWrapping="Wrap" VerticalAlignment="Top" Width="120" VerticalContentAlignment="Center"/>
         </StackPanel>
 
-        <ListView x:Name="LvLog" Grid.Row="6" Margin="5" ItemsSource="{Binding LogCollection}">
+        <StackPanel Grid.Row="5" Orientation="Horizontal">
+            <Label Content="Password:" HorizontalAlignment="Left" Margin="10" VerticalAlignment="Top" Width="66"/>
+            <PasswordBox x:Name="PBoxPassword" HorizontalAlignment="Left" Margin="10" VerticalAlignment="Top" Width="120" VerticalContentAlignment="Center"/>
+        </StackPanel>
+ 
+        <StackPanel Grid.Row="6" Orientation="Horizontal">
+            <Button x:Name="ButtonDownload" Content="Begin Downloads" Margin="10" VerticalAlignment="Bottom" Click="ButtonDownload_Click" IsDefault="True"/>
+            <Button x:Name="ButtonAbort" Content="Abort" Margin="10" Click="ButtonAbort_OnClick" IsEnabled="False" IsCancel="True"/>
+        </StackPanel>
+
+        <ListView x:Name="LvLog" Grid.Row="7" Margin="5" ItemsSource="{Binding LogCollection}">
             <ListView.View>
                 <GridView>
                     <GridViewColumn Header="Filename" Width="400" DisplayMemberBinding="{Binding Filename}"/>

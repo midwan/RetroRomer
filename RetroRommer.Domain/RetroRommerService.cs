@@ -60,8 +60,8 @@ public class RetroRommerService
             string result;
             // ReSharper disable once RedundantVerbatimPrefix
             _logger.Fatal($"File failed to download: {file}.\n{@ex}");
-            var pos1 = ex.Message.IndexOf("(", StringComparison.Ordinal) + 1;
-            var pos2 = ex.Message.IndexOf(")", StringComparison.Ordinal);
+            var pos1 = ex.Message.IndexOf('(', StringComparison.Ordinal) + 1;
+            var pos2 = ex.Message.IndexOf(')');
             if (pos1 != -1 && pos2 != -1)
                 result = ex.Message[pos1..pos2];
             else

@@ -14,7 +14,7 @@ namespace RetroRommer.Core;
 /// <summary>
 ///     Interaction logic for MainWindow.xaml
 /// </summary>
-public partial class MainWindow : Window
+public partial class MainWindow
 {
     private readonly RetroRommerService _service;
     private string _destinationPath;
@@ -49,7 +49,7 @@ public partial class MainWindow : Window
     }
 
     public ObservableCollection<LogDto> LogCollection { get; } =
-        new();
+        [];
 
     private void ListView_CollectionChanged(object sender, NotifyCollectionChangedEventArgs e)
     {

@@ -105,16 +105,22 @@ public partial class MainWindow
     {
         _logger.Information("Beginning to download files...");
         ButtonAbort.IsEnabled = true;
-        var fileContents = _service.ReadFile(_filename);
-        var processedContents = RetroRommerService.AddFilenameExtensionToEntries(fileContents);
+        
+        // Use new ParseReport which returns IEnumerable<DownloadItem>
+        var downloadItems = _service.ParseReport(_filename);
 
-        foreach (var file in processedContents)
+        foreach (var item in downloadItems)
         {
             if (_abortRequested) break;
+            
+            // Log what we are doing?
+            // Existing logic logged the result.
+            // item.FileName is the filename we are downloading (or chd name)
+            
             var logRow = new LogDto
             {
-                Filename = file, 
-                Result = await _service.GetFile(_website, file, _username, _password, _destinationPath)
+                Filename = item.FileName, 
+                Result = await _service.GetFile(_website, item, _username, _password, _destinationPath)
             };
             LogCollection.Add(logRow);
 

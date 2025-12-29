@@ -1,6 +1,7 @@
 ﻿using System.Collections.ObjectModel;
 using System.Collections.Specialized;
 using System.IO;
+using System.Threading;
 using System.Windows;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Win32;
@@ -24,6 +25,7 @@ public partial class MainWindow
     private string _username;
     private bool _abortRequested;
     private string _website;
+    private CancellationTokenSource? _downloadCts;
 
     public MainWindow()
     {
@@ -98,34 +100,55 @@ public partial class MainWindow
                 "Missing required information", MessageBoxButton.OK, MessageBoxImage.Error);
             return;
         }
-        await PrepareAndDownloadFiles();
+
+        _abortRequested = false;
+        _downloadCts?.Cancel();
+        _downloadCts?.Dispose();
+        _downloadCts = new CancellationTokenSource();
+
+        await PrepareAndDownloadFiles(_downloadCts.Token);
     }
 
-    private async Task PrepareAndDownloadFiles()
+    private async Task PrepareAndDownloadFiles(CancellationToken cancellationToken)
     {
         _logger.Information("Beginning to download files...");
         ButtonAbort.IsEnabled = true;
         
-        // Use new ParseReport which returns IEnumerable<DownloadItem>
         var downloadItems = _service.ParseReport(_filename);
 
-        foreach (var item in downloadItems)
+        try
         {
-            if (_abortRequested) break;
-            
-            // Log what we are doing?
-            // Existing logic logged the result.
-            // item.FileName is the filename we are downloading (or chd name)
-            
-            var logRow = new LogDto
+            foreach (var item in downloadItems)
             {
-                Filename = item.FileName, 
-                Result = await _service.GetFile(_website, item, _username, _password, _destinationPath)
-            };
-            LogCollection.Add(logRow);
+                if (_abortRequested || cancellationToken.IsCancellationRequested) break;
+                
+                try
+                {
+                    var logRow = new LogDto
+                    {
+                        Filename = item.FileName,
+                        Result = await _service.GetFile(_website, item, _username, _password, _destinationPath, cancellationToken)
+                    };
+                    LogCollection.Add(logRow);
 
-            if (logRow.Result == "Unauthorized")
-                break;
+                    if (logRow.Result == "Unauthorized")
+                        break;
+                }
+                catch (TooManyAttemptsException ex)
+                {
+                    LogCollection.Add(new LogDto
+                    {
+                        Filename = item.FileName,
+                        Result = ex.Message
+                    });
+                    _abortRequested = true;
+                    break;
+                }
+            }
+        }
+        catch (OperationCanceledException)
+        {
+            _abortRequested = true;
         }
 
         if (_abortRequested)
@@ -146,11 +169,14 @@ public partial class MainWindow
             LogCollection.Add(logRow);
         }
         ButtonAbort.IsEnabled = false;
+        _downloadCts?.Dispose();
+        _downloadCts = null;
     }
 
     private void ButtonAbort_OnClick(object sender, RoutedEventArgs e)
     {
         _abortRequested = true;
         ButtonAbort.IsEnabled = false;
+        _downloadCts?.Cancel();
     }
 }
